@@ -5,8 +5,8 @@ go 1.18
 require (
 	github.com/evanphx/json-patch v4.12.0+incompatible
 	github.com/google/gnostic v0.5.7-v3refs
-	github.com/kcp-dev/apimachinery v0.0.0-20221102195355-d65878bc16be
-	github.com/kcp-dev/logicalcluster/v2 v2.0.0-alpha.1
+	github.com/kcp-dev/apimachinery v0.0.0-20221205201657-a88957b72f6d
+	github.com/kcp-dev/logicalcluster/v3 v3.0.0-20221206202856-4d025e96f4a8
 	k8s.io/api v0.24.3
 	k8s.io/apimachinery v0.24.3
 	k8s.io/client-go v0.24.3
@@ -49,4 +49,9 @@ require (
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
+)
+
+replace (
+	github.com/kcp-dev/apimachinery => ../apimachinery
+	github.com/kcp-dev/logicalcluster/v3 => ../logicalcluster
 )
