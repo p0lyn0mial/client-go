@@ -25,7 +25,8 @@ TMPDIR := $(shell mktemp -d)
 
 CODE_GENERATOR_VER := 2dc1248118a7f2337c6374ff5778c0880e1a4226
 CODE_GENERATOR_BIN := code-generator
-CODE_GENERATOR := $(TOOLS_DIR)/$(CODE_GENERATOR_BIN)-$(CODE_GENERATOR_VER)
+#CODE_GENERATOR := $(TOOLS_DIR)/$(CODE_GENERATOR_BIN)-$(CODE_GENERATOR_VER)
+CODE_GENERATOR := /Users/lszaszki/go/src/github.com/kcp-dev/code-generator/bin/code-generator
 export CODE_GENERATOR # so hack scripts can use it
 
 $(CODE_GENERATOR):
