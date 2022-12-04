@@ -22,7 +22,7 @@ limitations under the License.
 package fake
 
 import (
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/discovery"
@@ -429,7 +429,7 @@ func (c *ClusterClientset) StorageV1beta1() kcpstoragev1beta1.StorageV1beta1Clus
 }
 
 // Cluster scopes this clientset to one cluster.
-func (c *ClusterClientset) Cluster(cluster logicalcluster.Name) client.Interface {
+func (c *ClusterClientset) Cluster(cluster logicalcluster.Path) client.Interface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -448,7 +448,7 @@ type Clientset struct {
 	*kcptesting.Fake
 	discovery *kcpfakediscovery.FakeDiscovery
 	tracker   kcptesting.ScopedObjectTracker
-	cluster   logicalcluster.Name
+	cluster   logicalcluster.Path
 }
 
 // Discovery retrieves the DiscoveryClient

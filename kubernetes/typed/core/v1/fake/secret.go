@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +50,7 @@ type secretsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *secretsClusterClient) Cluster(cluster logicalcluster.Name) kcpcorev1.SecretsNamespacer {
+func (c *secretsClusterClient) Cluster(cluster logicalcluster.Path) kcpcorev1.SecretsNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -85,7 +85,7 @@ func (c *secretsClusterClient) Watch(ctx context.Context, opts metav1.ListOption
 
 type secretsNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *secretsNamespacer) Namespace(namespace string) corev1client.SecretInterface {
@@ -94,7 +94,7 @@ func (n *secretsNamespacer) Namespace(namespace string) corev1client.SecretInter
 
 type secretsClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

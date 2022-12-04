@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +50,7 @@ type controllerRevisionsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *controllerRevisionsClusterClient) Cluster(cluster logicalcluster.Name) kcpappsv1.ControllerRevisionsNamespacer {
+func (c *controllerRevisionsClusterClient) Cluster(cluster logicalcluster.Path) kcpappsv1.ControllerRevisionsNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -85,7 +85,7 @@ func (c *controllerRevisionsClusterClient) Watch(ctx context.Context, opts metav
 
 type controllerRevisionsNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *controllerRevisionsNamespacer) Namespace(namespace string) appsv1client.ControllerRevisionInterface {
@@ -94,7 +94,7 @@ func (n *controllerRevisionsNamespacer) Namespace(namespace string) appsv1client
 
 type controllerRevisionsClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

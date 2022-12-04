@@ -22,7 +22,7 @@ limitations under the License.
 package v1
 
 import (
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	schedulingv1 "k8s.io/client-go/kubernetes/typed/scheduling/v1"
 	"k8s.io/client-go/rest"
@@ -37,7 +37,7 @@ type SchedulingV1ClusterClient struct {
 	*kcptesting.Fake
 }
 
-func (c *SchedulingV1ClusterClient) Cluster(cluster logicalcluster.Name) schedulingv1.SchedulingV1Interface {
+func (c *SchedulingV1ClusterClient) Cluster(cluster logicalcluster.Path) schedulingv1.SchedulingV1Interface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -52,7 +52,7 @@ var _ schedulingv1.SchedulingV1Interface = (*SchedulingV1Client)(nil)
 
 type SchedulingV1Client struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *SchedulingV1Client) RESTClient() rest.Interface {

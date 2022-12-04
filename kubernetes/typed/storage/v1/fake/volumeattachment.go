@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	storagev1 "k8s.io/api/storage/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +49,7 @@ type volumeAttachmentsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *volumeAttachmentsClusterClient) Cluster(cluster logicalcluster.Name) storagev1client.VolumeAttachmentInterface {
+func (c *volumeAttachmentsClusterClient) Cluster(cluster logicalcluster.Path) storagev1client.VolumeAttachmentInterface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -84,7 +84,7 @@ func (c *volumeAttachmentsClusterClient) Watch(ctx context.Context, opts metav1.
 
 type volumeAttachmentsClient struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *volumeAttachmentsClient) Create(ctx context.Context, volumeAttachment *storagev1.VolumeAttachment, opts metav1.CreateOptions) (*storagev1.VolumeAttachment, error) {

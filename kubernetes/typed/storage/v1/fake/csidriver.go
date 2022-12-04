@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	storagev1 "k8s.io/api/storage/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +49,7 @@ type cSIDriversClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *cSIDriversClusterClient) Cluster(cluster logicalcluster.Name) storagev1client.CSIDriverInterface {
+func (c *cSIDriversClusterClient) Cluster(cluster logicalcluster.Path) storagev1client.CSIDriverInterface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -84,7 +84,7 @@ func (c *cSIDriversClusterClient) Watch(ctx context.Context, opts metav1.ListOpt
 
 type cSIDriversClient struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *cSIDriversClient) Create(ctx context.Context, cSIDriver *storagev1.CSIDriver, opts metav1.CreateOptions) (*storagev1.CSIDriver, error) {

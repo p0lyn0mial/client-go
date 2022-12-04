@@ -22,7 +22,7 @@ limitations under the License.
 package v1
 
 import (
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	autoscalingv1 "k8s.io/client-go/kubernetes/typed/autoscaling/v1"
 	"k8s.io/client-go/rest"
@@ -37,7 +37,7 @@ type AutoscalingV1ClusterClient struct {
 	*kcptesting.Fake
 }
 
-func (c *AutoscalingV1ClusterClient) Cluster(cluster logicalcluster.Name) autoscalingv1.AutoscalingV1Interface {
+func (c *AutoscalingV1ClusterClient) Cluster(cluster logicalcluster.Path) autoscalingv1.AutoscalingV1Interface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -52,7 +52,7 @@ var _ autoscalingv1.AutoscalingV1Interface = (*AutoscalingV1Client)(nil)
 
 type AutoscalingV1Client struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *AutoscalingV1Client) RESTClient() rest.Interface {

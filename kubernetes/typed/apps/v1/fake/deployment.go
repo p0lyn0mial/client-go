@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	appsv1 "k8s.io/api/apps/v1"
 	autoscalingv1 "k8s.io/api/autoscaling/v1"
@@ -52,7 +52,7 @@ type deploymentsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *deploymentsClusterClient) Cluster(cluster logicalcluster.Name) kcpappsv1.DeploymentsNamespacer {
+func (c *deploymentsClusterClient) Cluster(cluster logicalcluster.Path) kcpappsv1.DeploymentsNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -87,7 +87,7 @@ func (c *deploymentsClusterClient) Watch(ctx context.Context, opts metav1.ListOp
 
 type deploymentsNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *deploymentsNamespacer) Namespace(namespace string) appsv1client.DeploymentInterface {
@@ -96,7 +96,7 @@ func (n *deploymentsNamespacer) Namespace(namespace string) appsv1client.Deploym
 
 type deploymentsClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

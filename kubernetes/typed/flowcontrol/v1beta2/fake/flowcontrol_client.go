@@ -22,7 +22,7 @@ limitations under the License.
 package v1beta2
 
 import (
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	flowcontrolv1beta2 "k8s.io/client-go/kubernetes/typed/flowcontrol/v1beta2"
 	"k8s.io/client-go/rest"
@@ -37,7 +37,7 @@ type FlowcontrolV1beta2ClusterClient struct {
 	*kcptesting.Fake
 }
 
-func (c *FlowcontrolV1beta2ClusterClient) Cluster(cluster logicalcluster.Name) flowcontrolv1beta2.FlowcontrolV1beta2Interface {
+func (c *FlowcontrolV1beta2ClusterClient) Cluster(cluster logicalcluster.Path) flowcontrolv1beta2.FlowcontrolV1beta2Interface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -56,7 +56,7 @@ var _ flowcontrolv1beta2.FlowcontrolV1beta2Interface = (*FlowcontrolV1beta2Clien
 
 type FlowcontrolV1beta2Client struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *FlowcontrolV1beta2Client) RESTClient() rest.Interface {

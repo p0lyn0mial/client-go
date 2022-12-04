@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +50,7 @@ type replicaSetsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *replicaSetsClusterClient) Cluster(cluster logicalcluster.Name) kcpextensionsv1beta1.ReplicaSetsNamespacer {
+func (c *replicaSetsClusterClient) Cluster(cluster logicalcluster.Path) kcpextensionsv1beta1.ReplicaSetsNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -85,7 +85,7 @@ func (c *replicaSetsClusterClient) Watch(ctx context.Context, opts metav1.ListOp
 
 type replicaSetsNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *replicaSetsNamespacer) Namespace(namespace string) extensionsv1beta1client.ReplicaSetInterface {
@@ -94,7 +94,7 @@ func (n *replicaSetsNamespacer) Namespace(namespace string) extensionsv1beta1cli
 
 type replicaSetsClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

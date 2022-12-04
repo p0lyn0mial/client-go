@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +49,7 @@ type persistentVolumesClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *persistentVolumesClusterClient) Cluster(cluster logicalcluster.Name) corev1client.PersistentVolumeInterface {
+func (c *persistentVolumesClusterClient) Cluster(cluster logicalcluster.Path) corev1client.PersistentVolumeInterface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -84,7 +84,7 @@ func (c *persistentVolumesClusterClient) Watch(ctx context.Context, opts metav1.
 
 type persistentVolumesClient struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *persistentVolumesClient) Create(ctx context.Context, persistentVolume *corev1.PersistentVolume, opts metav1.CreateOptions) (*corev1.PersistentVolume, error) {

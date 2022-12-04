@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	storagev1beta1 "k8s.io/api/storage/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +49,7 @@ type storageClassesClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *storageClassesClusterClient) Cluster(cluster logicalcluster.Name) storagev1beta1client.StorageClassInterface {
+func (c *storageClassesClusterClient) Cluster(cluster logicalcluster.Path) storagev1beta1client.StorageClassInterface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -84,7 +84,7 @@ func (c *storageClassesClusterClient) Watch(ctx context.Context, opts metav1.Lis
 
 type storageClassesClient struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *storageClassesClient) Create(ctx context.Context, storageClass *storagev1beta1.StorageClass, opts metav1.CreateOptions) (*storagev1beta1.StorageClass, error) {

@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +50,7 @@ type networkPoliciesClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *networkPoliciesClusterClient) Cluster(cluster logicalcluster.Name) kcpextensionsv1beta1.NetworkPoliciesNamespacer {
+func (c *networkPoliciesClusterClient) Cluster(cluster logicalcluster.Path) kcpextensionsv1beta1.NetworkPoliciesNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -85,7 +85,7 @@ func (c *networkPoliciesClusterClient) Watch(ctx context.Context, opts metav1.Li
 
 type networkPoliciesNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *networkPoliciesNamespacer) Namespace(namespace string) extensionsv1beta1client.NetworkPolicyInterface {
@@ -94,7 +94,7 @@ func (n *networkPoliciesNamespacer) Namespace(namespace string) extensionsv1beta
 
 type networkPoliciesClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

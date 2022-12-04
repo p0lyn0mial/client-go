@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	batchv1 "k8s.io/api/batch/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +50,7 @@ type cronJobsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *cronJobsClusterClient) Cluster(cluster logicalcluster.Name) kcpbatchv1.CronJobsNamespacer {
+func (c *cronJobsClusterClient) Cluster(cluster logicalcluster.Path) kcpbatchv1.CronJobsNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -85,7 +85,7 @@ func (c *cronJobsClusterClient) Watch(ctx context.Context, opts metav1.ListOptio
 
 type cronJobsNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *cronJobsNamespacer) Namespace(namespace string) batchv1client.CronJobInterface {
@@ -94,7 +94,7 @@ func (n *cronJobsNamespacer) Namespace(namespace string) batchv1client.CronJobIn
 
 type cronJobsClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

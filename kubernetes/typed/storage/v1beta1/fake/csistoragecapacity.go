@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	storagev1beta1 "k8s.io/api/storage/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +50,7 @@ type cSIStorageCapacitiesClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *cSIStorageCapacitiesClusterClient) Cluster(cluster logicalcluster.Name) kcpstoragev1beta1.CSIStorageCapacitiesNamespacer {
+func (c *cSIStorageCapacitiesClusterClient) Cluster(cluster logicalcluster.Path) kcpstoragev1beta1.CSIStorageCapacitiesNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -85,7 +85,7 @@ func (c *cSIStorageCapacitiesClusterClient) Watch(ctx context.Context, opts meta
 
 type cSIStorageCapacitiesNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *cSIStorageCapacitiesNamespacer) Namespace(namespace string) storagev1beta1client.CSIStorageCapacityInterface {
@@ -94,7 +94,7 @@ func (n *cSIStorageCapacitiesNamespacer) Namespace(namespace string) storagev1be
 
 type cSIStorageCapacitiesClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

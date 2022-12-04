@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	autoscalingv1 "k8s.io/api/autoscaling/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -51,7 +51,7 @@ type replicationControllersClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *replicationControllersClusterClient) Cluster(cluster logicalcluster.Name) kcpcorev1.ReplicationControllersNamespacer {
+func (c *replicationControllersClusterClient) Cluster(cluster logicalcluster.Path) kcpcorev1.ReplicationControllersNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -86,7 +86,7 @@ func (c *replicationControllersClusterClient) Watch(ctx context.Context, opts me
 
 type replicationControllersNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *replicationControllersNamespacer) Namespace(namespace string) corev1client.ReplicationControllerInterface {
@@ -95,7 +95,7 @@ func (n *replicationControllersNamespacer) Namespace(namespace string) corev1cli
 
 type replicationControllersClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

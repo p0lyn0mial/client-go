@@ -24,7 +24,7 @@ package v1
 import (
 	"context"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	authorizationv1 "k8s.io/api/authorization/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -42,7 +42,7 @@ type subjectAccessReviewsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *subjectAccessReviewsClusterClient) Cluster(cluster logicalcluster.Name) authorizationv1client.SubjectAccessReviewInterface {
+func (c *subjectAccessReviewsClusterClient) Cluster(cluster logicalcluster.Path) authorizationv1client.SubjectAccessReviewInterface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -52,7 +52,7 @@ func (c *subjectAccessReviewsClusterClient) Cluster(cluster logicalcluster.Name)
 
 type subjectAccessReviewsClient struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *subjectAccessReviewsClient) Create(ctx context.Context, subjectAccessReview *authorizationv1.SubjectAccessReview, opts metav1.CreateOptions) (*authorizationv1.SubjectAccessReview, error) {

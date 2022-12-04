@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	autoscalingv2beta2 "k8s.io/api/autoscaling/v2beta2"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +50,7 @@ type horizontalPodAutoscalersClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *horizontalPodAutoscalersClusterClient) Cluster(cluster logicalcluster.Name) kcpautoscalingv2beta2.HorizontalPodAutoscalersNamespacer {
+func (c *horizontalPodAutoscalersClusterClient) Cluster(cluster logicalcluster.Path) kcpautoscalingv2beta2.HorizontalPodAutoscalersNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -85,7 +85,7 @@ func (c *horizontalPodAutoscalersClusterClient) Watch(ctx context.Context, opts 
 
 type horizontalPodAutoscalersNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *horizontalPodAutoscalersNamespacer) Namespace(namespace string) autoscalingv2beta2client.HorizontalPodAutoscalerInterface {
@@ -94,7 +94,7 @@ func (n *horizontalPodAutoscalersNamespacer) Namespace(namespace string) autosca
 
 type horizontalPodAutoscalersClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

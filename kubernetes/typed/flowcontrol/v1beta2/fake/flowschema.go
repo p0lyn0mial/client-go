@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	flowcontrolv1beta2 "k8s.io/api/flowcontrol/v1beta2"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +49,7 @@ type flowSchemasClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *flowSchemasClusterClient) Cluster(cluster logicalcluster.Name) flowcontrolv1beta2client.FlowSchemaInterface {
+func (c *flowSchemasClusterClient) Cluster(cluster logicalcluster.Path) flowcontrolv1beta2client.FlowSchemaInterface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -84,7 +84,7 @@ func (c *flowSchemasClusterClient) Watch(ctx context.Context, opts metav1.ListOp
 
 type flowSchemasClient struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *flowSchemasClient) Create(ctx context.Context, flowSchema *flowcontrolv1beta2.FlowSchema, opts metav1.CreateOptions) (*flowcontrolv1beta2.FlowSchema, error) {

@@ -22,7 +22,7 @@ limitations under the License.
 package v1beta1
 
 import (
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	rbacv1beta1 "k8s.io/client-go/kubernetes/typed/rbac/v1beta1"
 	"k8s.io/client-go/rest"
@@ -37,7 +37,7 @@ type RbacV1beta1ClusterClient struct {
 	*kcptesting.Fake
 }
 
-func (c *RbacV1beta1ClusterClient) Cluster(cluster logicalcluster.Name) rbacv1beta1.RbacV1beta1Interface {
+func (c *RbacV1beta1ClusterClient) Cluster(cluster logicalcluster.Path) rbacv1beta1.RbacV1beta1Interface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -64,7 +64,7 @@ var _ rbacv1beta1.RbacV1beta1Interface = (*RbacV1beta1Client)(nil)
 
 type RbacV1beta1Client struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *RbacV1beta1Client) RESTClient() rest.Interface {

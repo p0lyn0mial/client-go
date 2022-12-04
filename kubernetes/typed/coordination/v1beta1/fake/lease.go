@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	coordinationv1beta1 "k8s.io/api/coordination/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +50,7 @@ type leasesClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *leasesClusterClient) Cluster(cluster logicalcluster.Name) kcpcoordinationv1beta1.LeasesNamespacer {
+func (c *leasesClusterClient) Cluster(cluster logicalcluster.Path) kcpcoordinationv1beta1.LeasesNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -85,7 +85,7 @@ func (c *leasesClusterClient) Watch(ctx context.Context, opts metav1.ListOptions
 
 type leasesNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *leasesNamespacer) Namespace(namespace string) coordinationv1beta1client.LeaseInterface {
@@ -94,7 +94,7 @@ func (n *leasesNamespacer) Namespace(namespace string) coordinationv1beta1client
 
 type leasesClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	flowcontrolv1alpha1 "k8s.io/api/flowcontrol/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +49,7 @@ type priorityLevelConfigurationsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *priorityLevelConfigurationsClusterClient) Cluster(cluster logicalcluster.Name) flowcontrolv1alpha1client.PriorityLevelConfigurationInterface {
+func (c *priorityLevelConfigurationsClusterClient) Cluster(cluster logicalcluster.Path) flowcontrolv1alpha1client.PriorityLevelConfigurationInterface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -84,7 +84,7 @@ func (c *priorityLevelConfigurationsClusterClient) Watch(ctx context.Context, op
 
 type priorityLevelConfigurationsClient struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *priorityLevelConfigurationsClient) Create(ctx context.Context, priorityLevelConfiguration *flowcontrolv1alpha1.PriorityLevelConfiguration, opts metav1.CreateOptions) (*flowcontrolv1alpha1.PriorityLevelConfiguration, error) {

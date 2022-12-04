@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	appsv1 "k8s.io/api/apps/v1"
 	autoscalingv1 "k8s.io/api/autoscaling/v1"
@@ -52,7 +52,7 @@ type statefulSetsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *statefulSetsClusterClient) Cluster(cluster logicalcluster.Name) kcpappsv1.StatefulSetsNamespacer {
+func (c *statefulSetsClusterClient) Cluster(cluster logicalcluster.Path) kcpappsv1.StatefulSetsNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -87,7 +87,7 @@ func (c *statefulSetsClusterClient) Watch(ctx context.Context, opts metav1.ListO
 
 type statefulSetsNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *statefulSetsNamespacer) Namespace(namespace string) appsv1client.StatefulSetInterface {
@@ -96,7 +96,7 @@ func (n *statefulSetsNamespacer) Namespace(namespace string) appsv1client.Statef
 
 type statefulSetsClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

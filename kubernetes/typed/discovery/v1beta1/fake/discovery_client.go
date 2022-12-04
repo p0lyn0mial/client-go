@@ -22,7 +22,7 @@ limitations under the License.
 package v1beta1
 
 import (
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	discoveryv1beta1 "k8s.io/client-go/kubernetes/typed/discovery/v1beta1"
 	"k8s.io/client-go/rest"
@@ -37,7 +37,7 @@ type DiscoveryV1beta1ClusterClient struct {
 	*kcptesting.Fake
 }
 
-func (c *DiscoveryV1beta1ClusterClient) Cluster(cluster logicalcluster.Name) discoveryv1beta1.DiscoveryV1beta1Interface {
+func (c *DiscoveryV1beta1ClusterClient) Cluster(cluster logicalcluster.Path) discoveryv1beta1.DiscoveryV1beta1Interface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -52,7 +52,7 @@ var _ discoveryv1beta1.DiscoveryV1beta1Interface = (*DiscoveryV1beta1Client)(nil
 
 type DiscoveryV1beta1Client struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *DiscoveryV1beta1Client) RESTClient() rest.Interface {

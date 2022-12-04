@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	nodev1 "k8s.io/api/node/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +49,7 @@ type runtimeClassesClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *runtimeClassesClusterClient) Cluster(cluster logicalcluster.Name) nodev1client.RuntimeClassInterface {
+func (c *runtimeClassesClusterClient) Cluster(cluster logicalcluster.Path) nodev1client.RuntimeClassInterface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -84,7 +84,7 @@ func (c *runtimeClassesClusterClient) Watch(ctx context.Context, opts metav1.Lis
 
 type runtimeClassesClient struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *runtimeClassesClient) Create(ctx context.Context, runtimeClass *nodev1.RuntimeClass, opts metav1.CreateOptions) (*nodev1.RuntimeClass, error) {

@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +49,7 @@ type mutatingWebhookConfigurationsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *mutatingWebhookConfigurationsClusterClient) Cluster(cluster logicalcluster.Name) admissionregistrationv1client.MutatingWebhookConfigurationInterface {
+func (c *mutatingWebhookConfigurationsClusterClient) Cluster(cluster logicalcluster.Path) admissionregistrationv1client.MutatingWebhookConfigurationInterface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -84,7 +84,7 @@ func (c *mutatingWebhookConfigurationsClusterClient) Watch(ctx context.Context, 
 
 type mutatingWebhookConfigurationsClient struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *mutatingWebhookConfigurationsClient) Create(ctx context.Context, mutatingWebhookConfiguration *admissionregistrationv1.MutatingWebhookConfiguration, opts metav1.CreateOptions) (*admissionregistrationv1.MutatingWebhookConfiguration, error) {

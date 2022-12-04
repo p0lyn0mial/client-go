@@ -22,7 +22,7 @@ limitations under the License.
 package v1
 
 import (
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	policyv1client "k8s.io/client-go/kubernetes/typed/policy/v1"
@@ -39,7 +39,7 @@ type evictionsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *evictionsClusterClient) Cluster(cluster logicalcluster.Name) kcppolicyv1.EvictionsNamespacer {
+func (c *evictionsClusterClient) Cluster(cluster logicalcluster.Path) kcppolicyv1.EvictionsNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -49,7 +49,7 @@ func (c *evictionsClusterClient) Cluster(cluster logicalcluster.Name) kcppolicyv
 
 type evictionsNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *evictionsNamespacer) Namespace(namespace string) policyv1client.EvictionInterface {
@@ -58,6 +58,6 @@ func (n *evictionsNamespacer) Namespace(namespace string) policyv1client.Evictio
 
 type evictionsClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }

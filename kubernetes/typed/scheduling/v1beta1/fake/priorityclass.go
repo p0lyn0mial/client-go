@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	schedulingv1beta1 "k8s.io/api/scheduling/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +49,7 @@ type priorityClassesClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *priorityClassesClusterClient) Cluster(cluster logicalcluster.Name) schedulingv1beta1client.PriorityClassInterface {
+func (c *priorityClassesClusterClient) Cluster(cluster logicalcluster.Path) schedulingv1beta1client.PriorityClassInterface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -84,7 +84,7 @@ func (c *priorityClassesClusterClient) Watch(ctx context.Context, opts metav1.Li
 
 type priorityClassesClient struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *priorityClassesClient) Create(ctx context.Context, priorityClass *schedulingv1beta1.PriorityClass, opts metav1.CreateOptions) (*schedulingv1beta1.PriorityClass, error) {

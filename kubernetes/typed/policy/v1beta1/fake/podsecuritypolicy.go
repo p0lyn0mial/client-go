@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	policyv1beta1 "k8s.io/api/policy/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +49,7 @@ type podSecurityPoliciesClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *podSecurityPoliciesClusterClient) Cluster(cluster logicalcluster.Name) policyv1beta1client.PodSecurityPolicyInterface {
+func (c *podSecurityPoliciesClusterClient) Cluster(cluster logicalcluster.Path) policyv1beta1client.PodSecurityPolicyInterface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -84,7 +84,7 @@ func (c *podSecurityPoliciesClusterClient) Watch(ctx context.Context, opts metav
 
 type podSecurityPoliciesClient struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *podSecurityPoliciesClient) Create(ctx context.Context, podSecurityPolicy *policyv1beta1.PodSecurityPolicy, opts metav1.CreateOptions) (*policyv1beta1.PodSecurityPolicy, error) {

@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +50,7 @@ type podsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *podsClusterClient) Cluster(cluster logicalcluster.Name) kcpcorev1.PodsNamespacer {
+func (c *podsClusterClient) Cluster(cluster logicalcluster.Path) kcpcorev1.PodsNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -85,7 +85,7 @@ func (c *podsClusterClient) Watch(ctx context.Context, opts metav1.ListOptions) 
 
 type podsNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *podsNamespacer) Namespace(namespace string) corev1client.PodInterface {
@@ -94,7 +94,7 @@ func (n *podsNamespacer) Namespace(namespace string) corev1client.PodInterface {
 
 type podsClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

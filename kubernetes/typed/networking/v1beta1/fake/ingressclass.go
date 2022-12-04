@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	networkingv1beta1 "k8s.io/api/networking/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +49,7 @@ type ingressClassesClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *ingressClassesClusterClient) Cluster(cluster logicalcluster.Name) networkingv1beta1client.IngressClassInterface {
+func (c *ingressClassesClusterClient) Cluster(cluster logicalcluster.Path) networkingv1beta1client.IngressClassInterface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -84,7 +84,7 @@ func (c *ingressClassesClusterClient) Watch(ctx context.Context, opts metav1.Lis
 
 type ingressClassesClient struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *ingressClassesClient) Create(ctx context.Context, ingressClass *networkingv1beta1.IngressClass, opts metav1.CreateOptions) (*networkingv1beta1.IngressClass, error) {

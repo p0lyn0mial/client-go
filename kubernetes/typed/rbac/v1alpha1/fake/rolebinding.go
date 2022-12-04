@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	rbacv1alpha1 "k8s.io/api/rbac/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +50,7 @@ type roleBindingsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *roleBindingsClusterClient) Cluster(cluster logicalcluster.Name) kcprbacv1alpha1.RoleBindingsNamespacer {
+func (c *roleBindingsClusterClient) Cluster(cluster logicalcluster.Path) kcprbacv1alpha1.RoleBindingsNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -85,7 +85,7 @@ func (c *roleBindingsClusterClient) Watch(ctx context.Context, opts metav1.ListO
 
 type roleBindingsNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *roleBindingsNamespacer) Namespace(namespace string) rbacv1alpha1client.RoleBindingInterface {
@@ -94,7 +94,7 @@ func (n *roleBindingsNamespacer) Namespace(namespace string) rbacv1alpha1client.
 
 type roleBindingsClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

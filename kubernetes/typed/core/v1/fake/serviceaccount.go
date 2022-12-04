@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	authenticationv1 "k8s.io/api/authentication/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -51,7 +51,7 @@ type serviceAccountsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *serviceAccountsClusterClient) Cluster(cluster logicalcluster.Name) kcpcorev1.ServiceAccountsNamespacer {
+func (c *serviceAccountsClusterClient) Cluster(cluster logicalcluster.Path) kcpcorev1.ServiceAccountsNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -86,7 +86,7 @@ func (c *serviceAccountsClusterClient) Watch(ctx context.Context, opts metav1.Li
 
 type serviceAccountsNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *serviceAccountsNamespacer) Namespace(namespace string) corev1client.ServiceAccountInterface {
@@ -95,7 +95,7 @@ func (n *serviceAccountsNamespacer) Namespace(namespace string) corev1client.Ser
 
 type serviceAccountsClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

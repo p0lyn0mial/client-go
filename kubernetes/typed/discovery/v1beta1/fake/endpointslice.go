@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	discoveryv1beta1 "k8s.io/api/discovery/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +50,7 @@ type endpointSlicesClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *endpointSlicesClusterClient) Cluster(cluster logicalcluster.Name) kcpdiscoveryv1beta1.EndpointSlicesNamespacer {
+func (c *endpointSlicesClusterClient) Cluster(cluster logicalcluster.Path) kcpdiscoveryv1beta1.EndpointSlicesNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -85,7 +85,7 @@ func (c *endpointSlicesClusterClient) Watch(ctx context.Context, opts metav1.Lis
 
 type endpointSlicesNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *endpointSlicesNamespacer) Namespace(namespace string) discoveryv1beta1client.EndpointSliceInterface {
@@ -94,7 +94,7 @@ func (n *endpointSlicesNamespacer) Namespace(namespace string) discoveryv1beta1c
 
 type endpointSlicesClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	certificatesv1beta1 "k8s.io/api/certificates/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,7 +49,7 @@ type certificateSigningRequestsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *certificateSigningRequestsClusterClient) Cluster(cluster logicalcluster.Name) certificatesv1beta1client.CertificateSigningRequestInterface {
+func (c *certificateSigningRequestsClusterClient) Cluster(cluster logicalcluster.Path) certificatesv1beta1client.CertificateSigningRequestInterface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -84,7 +84,7 @@ func (c *certificateSigningRequestsClusterClient) Watch(ctx context.Context, opt
 
 type certificateSigningRequestsClient struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *certificateSigningRequestsClient) Create(ctx context.Context, certificateSigningRequest *certificatesv1beta1.CertificateSigningRequest, opts metav1.CreateOptions) (*certificatesv1beta1.CertificateSigningRequest, error) {

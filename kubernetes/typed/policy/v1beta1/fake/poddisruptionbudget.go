@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	policyv1beta1 "k8s.io/api/policy/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +50,7 @@ type podDisruptionBudgetsClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *podDisruptionBudgetsClusterClient) Cluster(cluster logicalcluster.Name) kcppolicyv1beta1.PodDisruptionBudgetsNamespacer {
+func (c *podDisruptionBudgetsClusterClient) Cluster(cluster logicalcluster.Path) kcppolicyv1beta1.PodDisruptionBudgetsNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -85,7 +85,7 @@ func (c *podDisruptionBudgetsClusterClient) Watch(ctx context.Context, opts meta
 
 type podDisruptionBudgetsNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *podDisruptionBudgetsNamespacer) Namespace(namespace string) policyv1beta1client.PodDisruptionBudgetInterface {
@@ -94,7 +94,7 @@ func (n *podDisruptionBudgetsNamespacer) Namespace(namespace string) policyv1bet
 
 type podDisruptionBudgetsClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

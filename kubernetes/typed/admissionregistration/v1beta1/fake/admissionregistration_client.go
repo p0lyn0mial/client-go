@@ -22,7 +22,7 @@ limitations under the License.
 package v1beta1
 
 import (
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	admissionregistrationv1beta1 "k8s.io/client-go/kubernetes/typed/admissionregistration/v1beta1"
 	"k8s.io/client-go/rest"
@@ -37,7 +37,7 @@ type AdmissionregistrationV1beta1ClusterClient struct {
 	*kcptesting.Fake
 }
 
-func (c *AdmissionregistrationV1beta1ClusterClient) Cluster(cluster logicalcluster.Name) admissionregistrationv1beta1.AdmissionregistrationV1beta1Interface {
+func (c *AdmissionregistrationV1beta1ClusterClient) Cluster(cluster logicalcluster.Path) admissionregistrationv1beta1.AdmissionregistrationV1beta1Interface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -56,7 +56,7 @@ var _ admissionregistrationv1beta1.AdmissionregistrationV1beta1Interface = (*Adm
 
 type AdmissionregistrationV1beta1Client struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *AdmissionregistrationV1beta1Client) RESTClient() rest.Interface {

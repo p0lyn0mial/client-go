@@ -22,7 +22,7 @@ limitations under the License.
 package v1beta1
 
 import (
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	batchv1beta1 "k8s.io/client-go/kubernetes/typed/batch/v1beta1"
 	"k8s.io/client-go/rest"
@@ -37,7 +37,7 @@ type BatchV1beta1ClusterClient struct {
 	*kcptesting.Fake
 }
 
-func (c *BatchV1beta1ClusterClient) Cluster(cluster logicalcluster.Name) batchv1beta1.BatchV1beta1Interface {
+func (c *BatchV1beta1ClusterClient) Cluster(cluster logicalcluster.Path) batchv1beta1.BatchV1beta1Interface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -52,7 +52,7 @@ var _ batchv1beta1.BatchV1beta1Interface = (*BatchV1beta1Client)(nil)
 
 type BatchV1beta1Client struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *BatchV1beta1Client) RESTClient() rest.Interface {

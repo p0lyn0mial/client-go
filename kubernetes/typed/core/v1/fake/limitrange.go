@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,7 +50,7 @@ type limitRangesClusterClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *limitRangesClusterClient) Cluster(cluster logicalcluster.Name) kcpcorev1.LimitRangesNamespacer {
+func (c *limitRangesClusterClient) Cluster(cluster logicalcluster.Path) kcpcorev1.LimitRangesNamespacer {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -85,7 +85,7 @@ func (c *limitRangesClusterClient) Watch(ctx context.Context, opts metav1.ListOp
 
 type limitRangesNamespacer struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (n *limitRangesNamespacer) Namespace(namespace string) corev1client.LimitRangeInterface {
@@ -94,7 +94,7 @@ func (n *limitRangesNamespacer) Namespace(namespace string) corev1client.LimitRa
 
 type limitRangesClient struct {
 	*kcptesting.Fake
-	Cluster   logicalcluster.Name
+	Cluster   logicalcluster.Path
 	Namespace string
 }
 

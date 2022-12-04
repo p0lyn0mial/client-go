@@ -22,7 +22,7 @@ limitations under the License.
 package v1
 
 import (
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	certificatesv1 "k8s.io/client-go/kubernetes/typed/certificates/v1"
 	"k8s.io/client-go/rest"
@@ -37,7 +37,7 @@ type CertificatesV1ClusterClient struct {
 	*kcptesting.Fake
 }
 
-func (c *CertificatesV1ClusterClient) Cluster(cluster logicalcluster.Name) certificatesv1.CertificatesV1Interface {
+func (c *CertificatesV1ClusterClient) Cluster(cluster logicalcluster.Path) certificatesv1.CertificatesV1Interface {
 	if cluster == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
@@ -52,7 +52,7 @@ var _ certificatesv1.CertificatesV1Interface = (*CertificatesV1Client)(nil)
 
 type CertificatesV1Client struct {
 	*kcptesting.Fake
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 }
 
 func (c *CertificatesV1Client) RESTClient() rest.Interface {

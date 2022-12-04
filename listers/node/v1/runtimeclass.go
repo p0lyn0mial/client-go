@@ -23,7 +23,7 @@ package v1
 
 import (
 	kcpcache "github.com/kcp-dev/apimachinery/pkg/cache"
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	nodev1 "k8s.io/api/node/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
