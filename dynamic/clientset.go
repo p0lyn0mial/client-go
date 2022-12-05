@@ -22,7 +22,7 @@ import (
 	"net/http"
 
 	kcpclient "github.com/kcp-dev/apimachinery/pkg/client"
-	"github.com/kcp-dev/logicalcluster/v2"
+	"github.com/kcp-dev/logicalcluster/v3"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -42,7 +42,7 @@ type ClusterClientset struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *ClusterClientset) Cluster(name logicalcluster.Name) dynamic.Interface {
+func (c *ClusterClientset) Cluster(name logicalcluster.Path) dynamic.Interface {
 	return c.clientCache.ClusterOrDie(name)
 }
 
@@ -110,12 +110,12 @@ type ClusterResourceClient struct {
 }
 
 // Cluster scopes the client down to a particular cluster.
-func (c *ClusterResourceClient) Cluster(name logicalcluster.Name) dynamic.NamespaceableResourceInterface {
-	if name == logicalcluster.Wildcard {
+func (c *ClusterResourceClient) Cluster(path logicalcluster.Path) dynamic.NamespaceableResourceInterface {
+	if path == logicalcluster.Wildcard {
 		panic("A specific cluster must be provided when scoping, not the wildcard.")
 	}
 
-	return c.clientCache.ClusterOrDie(name).Resource(c.resource)
+	return c.clientCache.ClusterOrDie(path).Resource(c.resource)
 }
 
 // List returns the entire collection of all resources across all clusters.
