@@ -46,7 +46,7 @@ type Fake struct {
 	// for every request in the order they are tried.
 	ProxyReactionChain []ProxyReactor
 
-	Resources map[logicalcluster.Name][]*metav1.APIResourceList
+	Resources map[logicalcluster.Path][]*metav1.APIResourceList
 }
 
 // Reactor is an interface to allow the composition of reaction functions.

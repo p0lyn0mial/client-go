@@ -40,7 +40,7 @@ import (
 )
 
 type ClusterNamespacedName struct {
-	Cluster logicalcluster.Name
+	Cluster logicalcluster.Path
 	types.NamespacedName
 }
 
@@ -52,7 +52,7 @@ func (c ClusterNamespacedName) String() string {
 // fake calls to a server by returning objects based on their kind,
 // namespace and name.
 type ObjectTracker interface {
-	Cluster(name logicalcluster.Name) ScopedObjectTracker
+	Cluster(name logicalcluster.Path) ScopedObjectTracker
 	AddAll(objects ...runtime.Object) error
 
 	// List retrieves all objects of a given kind in the given
@@ -261,10 +261,10 @@ type tracker struct {
 	// Manipulations on resources will broadcast the notification events into the
 	// watchers' channel. Note that too many unhandled events (currently 100,
 	// see apimachinery/pkg/watch.DefaultChanSize) will cause a panic.
-	watchers map[schema.GroupVersionResource]map[logicalcluster.Name]map[string][]*watch.RaceFreeFakeWatcher
+	watchers map[schema.GroupVersionResource]map[logicalcluster.Path]map[string][]*watch.RaceFreeFakeWatcher
 }
 
-func (t *tracker) Cluster(name logicalcluster.Name) ScopedObjectTracker {
+func (t *tracker) Cluster(name logicalcluster.Path) ScopedObjectTracker {
 	return &scopedTracker{
 		tracker: t,
 		cluster: name,
@@ -273,7 +273,7 @@ func (t *tracker) Cluster(name logicalcluster.Name) ScopedObjectTracker {
 
 type scopedTracker struct {
 	*tracker
-	cluster logicalcluster.Name
+	cluster logicalcluster.Path
 }
 
 var _ ObjectTracker = &tracker{}
@@ -285,7 +285,7 @@ func NewObjectTracker(scheme ObjectScheme, decoder runtime.Decoder) ObjectTracke
 		scheme:   scheme,
 		decoder:  decoder,
 		objects:  make(map[schema.GroupVersionResource]map[ClusterNamespacedName]runtime.Object),
-		watchers: make(map[schema.GroupVersionResource]map[logicalcluster.Name]map[string][]*watch.RaceFreeFakeWatcher),
+		watchers: make(map[schema.GroupVersionResource]map[logicalcluster.Path]map[string][]*watch.RaceFreeFakeWatcher),
 	}
 }
 
@@ -315,7 +315,7 @@ func (t *tracker) AddAll(objects ...runtime.Object) error {
 			if !ok {
 				return fmt.Errorf("cannot extract logical cluster from %T", toAdd[i])
 			}
-			if err := t.Cluster(logicalcluster.From(metaObj)).Add(toAdd[i]); err != nil {
+			if err := t.Cluster(logicalcluster.From(metaObj).Path()).Add(toAdd[i]); err != nil {
 				return err
 			}
 		}
@@ -389,14 +389,14 @@ func (t *tracker) Watch(gvr schema.GroupVersionResource, ns string) (watch.Inter
 	return t.watch(gvr, logicalcluster.Wildcard, ns)
 }
 
-func (t *tracker) watch(gvr schema.GroupVersionResource, cluster logicalcluster.Name, ns string) (watch.Interface, error) {
+func (t *tracker) watch(gvr schema.GroupVersionResource, cluster logicalcluster.Path, ns string) (watch.Interface, error) {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 
 	fakewatcher := watch.NewRaceFreeFake()
 
 	if _, exists := t.watchers[gvr]; !exists {
-		t.watchers[gvr] = make(map[logicalcluster.Name]map[string][]*watch.RaceFreeFakeWatcher)
+		t.watchers[gvr] = make(map[logicalcluster.Path]map[string][]*watch.RaceFreeFakeWatcher)
 	}
 	if _, exists := t.watchers[gvr][cluster]; !exists {
 		t.watchers[gvr][cluster] = make(map[string][]*watch.RaceFreeFakeWatcher)
@@ -482,7 +482,7 @@ func (t *scopedTracker) Update(gvr schema.GroupVersionResource, obj runtime.Obje
 	return t.add(gvr, obj, ns, true)
 }
 
-func (t *tracker) getWatches(gvr schema.GroupVersionResource, cluster logicalcluster.Name, ns string) []*watch.RaceFreeFakeWatcher {
+func (t *tracker) getWatches(gvr schema.GroupVersionResource, cluster logicalcluster.Path, ns string) []*watch.RaceFreeFakeWatcher {
 	watches := []*watch.RaceFreeFakeWatcher{}
 	gvrWatchers, ok := t.watchers[gvr]
 	if !ok {
@@ -540,7 +540,7 @@ func (t *scopedTracker) add(gvr schema.GroupVersionResource, obj runtime.Object,
 		t.objects[gvr] = make(map[ClusterNamespacedName]runtime.Object)
 	}
 
-	cluster := logicalcluster.From(newMeta)
+	cluster := logicalcluster.From(newMeta).Path()
 	if cluster.Empty() {
 		cluster = t.cluster
 	}
@@ -644,7 +644,7 @@ func filterByNamespace(objs map[ClusterNamespacedName]runtime.Object, ns string)
 // filterByCluster returns all objects in the collection that
 // match provided namespace. Empty namespace matches
 // non-namespaced objects.
-func filterByCluster(objs []runtime.Object, cluster logicalcluster.Name) ([]runtime.Object, error) {
+func filterByCluster(objs []runtime.Object, cluster logicalcluster.Path) ([]runtime.Object, error) {
 	var res []runtime.Object
 
 	for _, obj := range objs {
@@ -652,7 +652,7 @@ func filterByCluster(objs []runtime.Object, cluster logicalcluster.Name) ([]runt
 		if err != nil {
 			return nil, err
 		}
-		if logicalcluster.From(acc) != cluster {
+		if logicalcluster.From(acc).Path() != cluster {
 			continue
 		}
 		res = append(res, obj)

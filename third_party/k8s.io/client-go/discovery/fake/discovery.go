@@ -40,7 +40,7 @@ import (
 type FakeDiscovery struct {
 	*kcptesting.Fake
 	FakedServerVersion *version.Info
-	Cluster            logicalcluster.Name
+	Cluster            logicalcluster.Path
 }
 
 // ServerResourcesForGroupVersion returns the supported resources for a group
